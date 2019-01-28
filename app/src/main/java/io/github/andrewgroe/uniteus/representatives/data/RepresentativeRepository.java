@@ -37,6 +37,7 @@ public class RepresentativeRepository {
         this.userAddressDao = userAddressDao;
     }
 
+    // Confirms presence of user's address in db
     public void fetchAddress() {
         disposables.add(userAddressDao.getCount()
                 .subscribeOn(Schedulers.io())
@@ -56,6 +57,7 @@ public class RepresentativeRepository {
                 }));
     }
 
+    // Store address in db
     public void storeAddress(String address, String city, String state) {
         // Create New Entity
         UserAddressEntity userAddress = new UserAddressEntity();
@@ -77,10 +79,12 @@ public class RepresentativeRepository {
         hasAddressLiveData.setValue(hasAddress);
     }
 
+    // ViewModel Observes This
     public MutableLiveData<Boolean> hasAddress() {
         return hasAddressLiveData;
     }
 
+    // Fetch Address From Local Data Source
     private void fetchAddressFromDB() {
         disposables.add(userAddressDao.getAll()
                 .subscribeOn(Schedulers.io())
@@ -127,7 +131,7 @@ public class RepresentativeRepository {
         return repsResponseLiveData;
     }
 
-    // Fetch From Remote Data Source
+    // Fetch Reps From Remote Data Source
     private void fetchRepsFromAPI() {
         // Requests Data From Remote API
         disposables.add(civicAPIService.getReps(address, key)
@@ -153,7 +157,7 @@ public class RepresentativeRepository {
                 ));
     }
 
-    // Fetch From Local Data Source
+    // Fetch Reps From Local Data Source
     private void fetchRepsFromDB() {
         // Requests Data From Local DB
         disposables.add(representativesDao.getAll()
@@ -175,7 +179,7 @@ public class RepresentativeRepository {
 
     }
 
-    // Store In Local DB
+    // Store Reps In Local DB
     private void storeReps(Representatives representatives) {
         List<RepresentativeEntity> repList = new ArrayList<>();
         // Convert From Object<Representatives> -> Object<List<RepresentativeEntity>>

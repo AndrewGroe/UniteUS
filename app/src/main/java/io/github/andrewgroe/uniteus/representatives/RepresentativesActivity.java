@@ -54,16 +54,19 @@ public class RepresentativesActivity extends AppCompatActivity {
 
     }
 
+    // Called when ViewModel receives address response from repo
     private void consumeAddressResponse(Boolean hasAddress) {
-        // If Address is false
+        // If Address is false, prompt user
         if (!hasAddress) {
             initAddressDialogue();
         } else {
+            // Load response from db
             viewModel.repsResponse().observe(this, this::consumeRepsResponse);
             viewModel.getRepsFromRepo();
         }
     }
 
+    // Show dialog for user to enter address
     private void initAddressDialogue() {
         DialogSheet dialogSheet = new DialogSheet(this);
         dialogSheet.setView(R.layout.dialogue_address);
@@ -88,12 +91,14 @@ public class RepresentativesActivity extends AppCompatActivity {
         progressBar.setVisibility(View.GONE);
     }
 
-
+    // Called when ViewModel receives representatives response from repo
     private void consumeRepsResponse(List<RepresentativeEntity> representatives) {
+
         Log.d(TAG, "got response from ViewModel " + representatives.size());
         // Pass reps to RecyclerView
         adapter = new RepresentativesRecyclerViewAdapter(this, representatives);
         recyclerView.setAdapter(adapter);
         progressBar.setVisibility(View.GONE);
     }
+
 }

@@ -26,11 +26,13 @@ public class RepresentativesViewModel extends ViewModel {
         return hasAddressResponseLiveData;
     }
 
+    // Check if repo has user's address stored
     void getHasAddressFromRepo() {
         representativeRepository.fetchAddress();
         representativeRepository.hasAddress().observeForever(this::consumeHasAddressResponse);
     }
 
+    // Called On Successful Observation of address
     private void consumeHasAddressResponse(Boolean hasAddress) {
         hasAddressResponseLiveData.setValue(hasAddress);
     }
@@ -41,7 +43,7 @@ public class RepresentativesViewModel extends ViewModel {
         representativeRepository.repsResponse().observeForever(this::consumeRepsResponse);
     }
 
-    // Called On Successful Observation
+    // Called On Successful Observation of reps
     private void consumeRepsResponse(List<RepresentativeEntity> representativeEntities) {
         repsResponseLiveData.setValue(representativeEntities);
     }
