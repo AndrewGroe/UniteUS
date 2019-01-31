@@ -29,21 +29,24 @@ public class RepresentativesRecyclerViewAdapter extends RecyclerView.Adapter<Rep
 
     private List<RepresentativeEntity> reps;
     private LayoutInflater inflater;
+    OnRepListener onRepListener;
 
-    public RepresentativesRecyclerViewAdapter(Context context, List<RepresentativeEntity> reps) {
+    public RepresentativesRecyclerViewAdapter(Context context, List<RepresentativeEntity> reps, OnRepListener onRepListener) {
         this.inflater = LayoutInflater.from(context);
         this.reps = reps;
+        this.onRepListener = onRepListener;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = inflater.inflate(R.layout.representatives_item, parent, false);
-        return new ViewHolder(view);
+        return new ViewHolder(view, onRepListener);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+
 
         // Set representative name
         String repName = reps.get(position).getName();
@@ -102,19 +105,33 @@ public class RepresentativesRecyclerViewAdapter extends RecyclerView.Adapter<Rep
         Glide.with(holder.itemView.getContext()).clear(holder.repImage);
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public interface OnRepListener {
+        void onRepClick(int position);
+    }
+
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         TextView repName;
         TextView repParty;
         ImageView repImage;
         ProgressBar progressBar;
+        OnRepListener onRepListener;
 
-        public ViewHolder(@NonNull View itemView) {
+        public ViewHolder(@NonNull View itemView, OnRepListener onRepListener) {
             super(itemView);
             repName = itemView.findViewById(R.id.rep_name);
             repParty = itemView.findViewById(R.id.rep_party);
             repImage = itemView.findViewById(R.id.profile_image);
             progressBar = itemView.findViewById(R.id.progress);
+
+            this.onRepListener = onRepListener;
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            onRepListener.onRepClick(getAdapterPosition());
         }
     }
+
 }

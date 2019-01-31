@@ -190,6 +190,16 @@ public class RepresentativeRepository {
             representative.setName(official.getName());
             representative.setParty(official.getParty());
             representative.setPhotoURL(official.getPhotoUrl());
+            representative.setAddress(official.getAddress().toString());
+            if (official.getUrls() != null) {
+                representative.setUrl(official.getUrls().get(0));
+            }
+            if (official.getPhones() != null) {
+                representative.setPhone(official.getPhones().get(0));
+            }
+            if (official.getEmails() != null) {
+                representative.setEmail(official.getEmails().get(0));
+            }
             repList.add(representative);
         }
         // Insert Into DB

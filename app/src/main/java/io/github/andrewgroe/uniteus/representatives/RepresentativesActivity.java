@@ -1,5 +1,6 @@
 package io.github.andrewgroe.uniteus.representatives;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -8,6 +9,8 @@ import android.widget.ProgressBar;
 import android.widget.Spinner;
 
 import com.marcoscg.dialogsheet.DialogSheet;
+
+import org.parceler.Parcels;
 
 import java.util.List;
 
@@ -21,7 +24,7 @@ import io.github.andrewgroe.uniteus.MyApplication;
 import io.github.andrewgroe.uniteus.R;
 import io.github.andrewgroe.uniteus.representatives.data.local.RepresentativeEntity;
 
-public class RepresentativesActivity extends AppCompatActivity {
+public class RepresentativesActivity extends AppCompatActivity implements RepresentativesRecyclerViewAdapter.OnRepListener {
     private static final String TAG = "RepresentativesActivity";
 
     @Inject
@@ -30,6 +33,7 @@ public class RepresentativesActivity extends AppCompatActivity {
     RepresentativesRecyclerViewAdapter adapter;
     RecyclerView recyclerView;
     ProgressBar progressBar;
+    List<RepresentativeEntity> representatives;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,13 +96,21 @@ public class RepresentativesActivity extends AppCompatActivity {
     }
 
     // Called when ViewModel receives representatives response from repo
-    private void consumeRepsResponse(List<RepresentativeEntity> representatives) {
+    private void consumeRepsResponse(List<RepresentativeEntity> reps) {
 
+        representatives = reps;
         Log.d(TAG, "got response from ViewModel " + representatives.size());
         // Pass reps to RecyclerView
-        adapter = new RepresentativesRecyclerViewAdapter(this, representatives);
+        adapter = new RepresentativesRecyclerViewAdapter(this, representatives, this);
         recyclerView.setAdapter(adapter);
         progressBar.setVisibility(View.GONE);
     }
 
+    @Override
+    public void onRepClick(int position) {
+
+        Intent intent = new Intent(this, RepresentativeDetailActivity.class);
+        intent.putExtra("EXTRA_REPS", Parcels.wrap(this.representatives.get(position)));
+        startActivity(intent);
+    }
 }

@@ -111,6 +111,16 @@ public class Address implements Parcelable {
         dest.writeValue(line3);
     }
 
+    @Override
+    public String toString() {
+        String finalString = line1 + '\n' +
+                line2 + '\n' +
+                city + ", " + state + '\n' +
+                zip + '\'';
+        finalString = finalString.replace("[", "").replace("]", "");
+        return finalString;
+    }
+
     public int describeContents() {
         return 0;
     }
